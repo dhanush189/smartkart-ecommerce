@@ -1,0 +1,26 @@
+{% extends "admin/base.html" %}
+
+{% block title %}SmartKart - Admin Signup{% endblock %}
+
+{% block content %}
+<section class="form-card auth-card">
+    <p class="eyebrow">Create Account</p>
+    <h2>Admin Registration</h2>
+    <p>Enter your details and SmartKart will send an OTP for verification.</p>
+
+    <form method="POST" action="{{ url_for('admin_signup') }}">
+        <div class="field">
+            <label for="name">Name</label>
+            <input id="name" type="text" name="name" placeholder="Your full name" required>
+        </div>
+        <div class="field">
+            <label for="email">Email</label>
+            <input id="email" type="email" name="email" placeholder="admin@example.com" required>
+        </div>
+        <div class="form-actions">
+            <button type="submit">Send OTP</button>
+        </div>
+    </form>
+    <p class="auth-link">Already have an account? <a href="{{ url_for('admin_login') }}">Login here</a></p>
+</section>
+{% endblock %}

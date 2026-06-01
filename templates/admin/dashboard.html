@@ -1,0 +1,143 @@
+{% extends "admin/base.html" %}
+
+{% block title %}SmartKart - Admin Dashboard{% endblock %}
+
+{% block content %}
+<section class="admin-dashboard-hero">
+    <div>
+        <p class="eyebrow">Seller Dashboard</p>
+        <h1>Welcome, {{ admin_name }}</h1>
+        <p>Manage your catalog, review customer demand, and keep orders moving from one professional workspace.</p>
+        <div class="hero-actions">
+            <a class="btn" href="{{ url_for('add_item_page') }}">Add Product</a>
+            <a class="btn btn-light-outline" href="{{ url_for('item_list') }}">Manage Catalog</a>
+            <a class="btn btn-light-outline" href="{{ url_for('admin_orders') }}">View Orders</a>
+        </div>
+    </div>
+    <div class="dashboard-summary-card">
+        <span class="metric-number">&#8377;{{ total_revenue }}</span>
+        <p>Paid revenue from your products</p>
+    </div>
+</section>
+
+<section class="metric-grid dashboard-metrics">
+    <a class="card metric-card" href="{{ url_for('item_list') }}">
+        <span class="metric-label">Products</span>
+        <strong>{{ total_products }}</strong>
+        <p>Active catalog items</p>
+    </a>
+    <a class="card metric-card" href="{{ url_for('admin_orders') }}">
+        <span class="metric-label">Orders</span>
+        <strong>{{ total_orders }}</strong>
+        <p>Orders containing your products</p>
+    </a>
+    <a class="card metric-card" href="{{ url_for('admin_orders') }}">
+        <span class="metric-label">Items Sold</span>
+        <strong>{{ items_sold }}</strong>
+        <p>Total quantity ordered</p>
+    </a>
+</section>
+
+<section class="table-card operations-panel">
+    <div class="panel-head">
+        <div>
+            <p class="eyebrow">Operations</p>
+            <h2>Seller Tools</h2>
+        </div>
+    </div>
+    <div class="operations-list">
+        <a href="{{ url_for('add_item_page') }}">
+            <span class="operation-icon">+</span>
+            <div>
+                <strong>Add product</strong>
+                <p>Create a new listing with image, price, category, and description.</p>
+            </div>
+            <span class="operation-link">Open</span>
+        </a>
+        <a href="{{ url_for('item_list') }}">
+            <span class="operation-icon">P</span>
+            <div>
+                <strong>Manage inventory</strong>
+                <p>Search, filter, update, review, and remove catalog items.</p>
+            </div>
+            <span class="operation-link">Open</span>
+        </a>
+        <a href="{{ url_for('admin_orders') }}">
+            <span class="operation-icon">O</span>
+            <div>
+                <strong>Fulfill orders</strong>
+                <p>View customer orders and update delivery progress.</p>
+            </div>
+            <span class="operation-link">Open</span>
+        </a>
+        <a href="{{ url_for('admin_profile') }}">
+            <span class="operation-icon">A</span>
+            <div>
+                <strong>Account settings</strong>
+                <p>Update your profile, email, password, and display image.</p>
+            </div>
+            <span class="operation-link">Open</span>
+        </a>
+    </div>
+</section>
+
+<section class="dashboard-columns">
+    <div class="table-card">
+        <div class="panel-head">
+            <div>
+                <p class="eyebrow">Recent Catalog</p>
+                <h2>Latest Products</h2>
+            </div>
+            <a class="show-more" href="{{ url_for('item_list') }}">View All</a>
+        </div>
+        <div class="dashboard-product-list">
+            {% for product in recent_products %}
+                <a class="dashboard-product-row" href="{{ url_for('view_item', item_id=product.product_id) }}">
+                    <img src="{{ url_for('static', filename='uploads/product_images/' ~ product.image) }}" alt="{{ product.name }}">
+                    <div>
+                        <strong>{{ product.name }}</strong>
+                        <p>{{ product.category }} · &#8377;{{ product.price }}</p>
+                    </div>
+                </a>
+            {% else %}
+                <div class="empty-state">
+                    <h3>No products yet</h3>
+                    <p>Add your first product to start selling.</p>
+                    <a class="btn" href="{{ url_for('add_item_page') }}">Add Product</a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="table-card">
+        <div class="panel-head">
+            <div>
+                <p class="eyebrow">Recent Orders</p>
+                <h2>Order Activity</h2>
+            </div>
+            <a class="show-more" href="{{ url_for('admin_orders') }}">View All</a>
+        </div>
+        <div class="dashboard-order-list">
+            {% for order in recent_orders %}
+                <a class="dashboard-order-row" href="{{ url_for('admin_order_details', order_id=order.order_id) }}">
+                    <div>
+                        <strong>#{{ order.order_id }} · {{ order.username or 'Customer' }}</strong>
+                        <p>{{ order.item_count }} items · {{ order.created_at }}</p>
+                    </div>
+                    <div class="order-row-meta">
+                        <strong>&#8377;{{ order.admin_amount }}</strong>
+                        <span class="status-badge status-{{ (order.order_status or 'Pending')|lower }}">
+                            {{ order.order_status or 'Pending' }}
+                        </span>
+                    </div>
+                </a>
+            {% else %}
+                <div class="empty-state">
+                    <h3>No orders yet</h3>
+                    <p>Orders containing your products will appear here.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endblock %}

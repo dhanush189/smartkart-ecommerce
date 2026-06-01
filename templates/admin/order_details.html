@@ -1,0 +1,123 @@
+{% extends "admin/base.html" %}
+
+{% block title %}SmartKart - Order #{{ order.order_id }}{% endblock %}
+
+{% block content %}
+<section class="section-head">
+    <div>
+        <p class="eyebrow">Order Management</p>
+        <h2>Order #{{ order.order_id }}</h2>
+        <p>Check customer details, ordered items, payment, and delivery progress.</p>
+    </div>
+    <a class="btn btn-secondary" href="{{ url_for('admin_orders') }}">Back to Orders</a>
+</section>
+
+<section class="order-admin-grid">
+    <article class="card order-summary-card">
+        <p class="eyebrow">Order Summary</p>
+        <h3>&#8377;{{ order.amount }}</h3>
+        <div class="detail-list">
+            <div class="detail-row">
+                <strong>Payment Status</strong>
+                <p>{{ order.payment_status }}</p>
+            </div>
+            <div class="detail-row">
+                <strong>Delivery Status</strong>
+                <p>{{ order.order_status or 'Pending' }}</p>
+            </div>
+            <div class="detail-row">
+                <strong>Order Date</strong>
+                <p>{{ order.created_at }}</p>
+            </div>
+            <div class="detail-row">
+                <strong>Razorpay Payment ID</strong>
+                <p>{{ order.razorpay_payment_id or 'Not available' }}</p>
+            </div>
+        </div>
+    </article>
+
+    <article class="card">
+        <p class="eyebrow">Customer Details</p>
+        <h3>{{ order.username or order.full_name or 'Customer' }}</h3>
+        <div class="detail-list">
+            <div class="detail-row">
+                <strong>Email</strong>
+                <p>{{ order.user_email or 'Not available' }}</p>
+            </div>
+            <div class="detail-row">
+                <strong>Phone</strong>
+                <p>{{ order.phone or 'Not available' }}</p>
+            </div>
+            <div class="detail-row">
+                <strong>Delivery Address</strong>
+                {% if order.address_line %}
+                    <p>{{ order.full_name }}<br>{{ order.address_line }}<br>{{ order.city }}, {{ order.state }} - {{ order.pincode }}</p>
+                {% else %}
+                    <p>No saved address found for this customer.</p>
+                {% endif %}
+            </div>
+        </div>
+    </article>
+</section>
+
+<section class="table-card" style="margin-top:24px;">
+    <div class="filter-panel">
+        <div class="section-head" style="margin-bottom:0;">
+            <div>
+                <p class="eyebrow">Tracking</p>
+                <h3 style="margin-bottom:0;">Order Progress</h3>
+            </div>
+            <form class="status-form" method="POST" action="{{ url_for('update_order_status', order_id=order.order_id) }}">
+                <select name="status">
+                    {% for status in statuses %}
+                        <option value="{{ status }}" {% if (order.order_status or 'Pending') == status %}selected{% endif %}>{{ status }}</option>
+                    {% endfor %}
+                </select>
+                <button type="submit">Update Status</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="progress-tracker">
+        {% for status in statuses %}
+            <div class="progress-step {% if loop.index0 <= status_index %}done{% endif %} {% if loop.index0 == status_index %}current{% endif %}">
+                <span>{{ loop.index }}</span>
+                <strong>{{ status }}</strong>
+            </div>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="table-card" style="margin-top:24px;">
+    <div class="filter-panel">
+        <p class="eyebrow" style="margin-bottom:4px;">Ordered Items</p>
+        <h3 style="margin-bottom:0;">Products in this order</h3>
+    </div>
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Quantity</th>
+                    <th>Price</th>
+                    <th>Line Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for it in items %}
+                    <tr>
+                        <td><strong>{{ it.product_name }}</strong></td>
+                        <td>{{ it.quantity }}</td>
+                        <td>&#8377;{{ it.price }}</td>
+                        <td><strong>&#8377;{{ it.price * it.quantity }}</strong></td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="4" style="text-align:center; padding:32px;">No items found for this order.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

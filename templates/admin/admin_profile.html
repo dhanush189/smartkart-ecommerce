@@ -1,0 +1,43 @@
+{% extends "admin/base.html" %}
+
+{% block title %}SmartKart - Admin Profile{% endblock %}
+
+{% block content %}
+<section class="form-card wide">
+    <p class="eyebrow">Account Settings</p>
+    <h2>Admin Profile</h2>
+    <p>Keep your admin account details updated.</p>
+
+    {% if admin.profile_image %}
+        <img class="profile-image" src="{{ url_for('static', filename='admin_uploads/' ~ admin.profile_image) }}" alt="{{ admin.name }}">
+    {% else %}
+        <div class="detail-row" style="margin-bottom:16px;">No profile image uploaded yet.</div>
+    {% endif %}
+
+    <form method="POST" action="{{ url_for('admin_profile_update') }}" enctype="multipart/form-data">
+        <div class="form-grid">
+            <div class="field">
+                <label for="name">Name</label>
+                <input id="name" type="text" name="name" value="{{ admin.name }}" required>
+            </div>
+            <div class="field">
+                <label for="email">Email</label>
+                <input id="email" type="email" name="email" value="{{ admin.email }}" required>
+            </div>
+            <div class="field">
+                <label for="password">New Password (Optional)</label>
+                <input id="password" type="password" name="password" placeholder="Leave blank to keep current">
+            </div>
+            <div class="field">
+                <label for="profile_image">Upload New Profile Image (Optional)</label>
+                <input id="profile_image" type="file" name="profile_image" accept="image/*">
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit">Update Profile</button>
+            <a class="btn btn-secondary" href="{{ url_for('admin_dashboard') }}">Back to Dashboard</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

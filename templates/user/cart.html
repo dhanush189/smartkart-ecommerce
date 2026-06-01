@@ -1,0 +1,113 @@
+{% extends "admin/base.html" %}
+
+{% block title %}SmartKart - Your Cart{% endblock %}
+
+{% block content %}
+<section class="section-head">
+    <div>
+        <p class="eyebrow">Shopping Cart</p>
+        <h2>Your Cart</h2>
+    </div>
+    <a class="btn btn-secondary" href="/user/products">Continue Shopping</a>
+</section>
+
+{% if not cart %}
+    <div class="card" style="text-align:center; padding:60px 24px;">
+        <div style="font-size:4rem; margin-bottom:16px;">&#128722;</div>
+        <h3>Your cart is empty</h3>
+        <p>Browse our products and add items to your cart.</p>
+        <a class="btn" href="/user/products" style="margin-top:16px; display:inline-flex;">Shop Now</a>
+    </div>
+{% else %}
+    <form class="table-card" method="POST" action="{{ url_for('checkout_selected_cart') }}" id="cart-checkout-form">
+        <div class="cart-select-toolbar">
+            <label class="cart-check-label">
+                <input type="checkbox" id="select-all-cart-items" checked>
+                <span>Select all products</span>
+            </label>
+            <p>Choose the products you want to buy now.</p>
+        </div>
+
+        <div class="table-wrap">
+            <table class="cart-table">
+                <thead>
+                    <tr>
+                        <th>Select</th>
+                        <th>Image</th>
+                        <th>Name</th>
+                        <th>Price</th>
+                        <th>Quantity</th>
+                        <th>Total</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pid, item in cart.items() %}
+                    <tr>
+                        <td>
+                            <input class="cart-item-checkbox" type="checkbox" name="selected_products" value="{{ pid }}" data-total="{{ item.price * item.quantity }}" checked aria-label="Select {{ item.name }}">
+                        </td>
+                        <td><img src="/static/uploads/product_images/{{ item.image }}" width="72" alt="{{ item.name }}"></td>
+                        <td><strong>{{ item.name }}</strong></td>
+                        <td>&#8377;{{ item.price }}</td>
+                        <td>
+                            <div class="qty-controls">
+                                <a href="/user/cart/decrease/{{ pid }}" class="qty-btn">&#8722;</a>
+                                <span style="font-weight:700; min-width:24px; text-align:center;">{{ item.quantity }}</span>
+                                <a href="/user/cart/increase/{{ pid }}" class="qty-btn">+</a>
+                            </div>
+                        </td>
+                        <td><strong>&#8377;{{ item.price * item.quantity }}</strong></td>
+                        <td><a class="btn btn-danger" style="font-size:0.8rem; padding:6px 14px;" href="/user/cart/remove/{{ pid }}">Remove</a></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="cart-summary">
+            <div class="cart-total">Selected Total: <span style="color:var(--primary);">&#8377;<span id="selected-cart-total">{{ grand_total }}</span></span></div>
+            <div class="actions">
+                <a class="btn btn-secondary" href="/user/products">Continue Shopping</a>
+                <button type="submit" id="checkout-selected-btn">Proceed to Checkout &#8594;</button>
+            </div>
+        </div>
+    </form>
+
+    <script>
+        (() => {
+            const selectAll = document.getElementById('select-all-cart-items');
+            const checkboxes = Array.from(document.querySelectorAll('.cart-item-checkbox'));
+            const totalEl = document.getElementById('selected-cart-total');
+            const checkoutBtn = document.getElementById('checkout-selected-btn');
+
+            const formatAmount = (amount) => amount.toLocaleString('en-IN', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+
+            const updateSelectedTotal = () => {
+                const selected = checkboxes.filter((checkbox) => checkbox.checked);
+                const total = selected.reduce((sum, checkbox) => sum + Number(checkbox.dataset.total || 0), 0);
+                totalEl.textContent = formatAmount(total);
+                checkoutBtn.disabled = selected.length === 0;
+                selectAll.checked = selected.length === checkboxes.length;
+                selectAll.indeterminate = selected.length > 0 && selected.length < checkboxes.length;
+            };
+
+            selectAll.addEventListener('change', () => {
+                checkboxes.forEach((checkbox) => {
+                    checkbox.checked = selectAll.checked;
+                });
+                updateSelectedTotal();
+            });
+
+            checkboxes.forEach((checkbox) => {
+                checkbox.addEventListener('change', updateSelectedTotal);
+            });
+
+            updateSelectedTotal();
+        })();
+    </script>
+{% endif %}
+{% endblock %}

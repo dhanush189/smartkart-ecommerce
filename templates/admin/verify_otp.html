@@ -1,0 +1,25 @@
+{% extends "admin/base.html" %}
+
+{% block title %}SmartKart - Verify OTP{% endblock %}
+
+{% block content %}
+<section class="form-card auth-card">
+    <p class="eyebrow">Email Verification</p>
+    <h2>Verify OTP</h2>
+    <p>Enter the OTP sent to your email and create a secure password.</p>
+
+    <form method="POST" action="{{ url_for('verify_otp') }}">
+        <div class="field">
+            <label for="otp">Enter OTP</label>
+            <input id="otp" type="text" name="otp" inputmode="numeric" placeholder="6-digit code" required>
+        </div>
+        <div class="field">
+            <label for="password">Create Password</label>
+            <input id="password" type="password" name="password" placeholder="Choose a secure password" required>
+        </div>
+        <div class="form-actions">
+            <button type="submit">Verify and Register</button>
+        </div>
+    </form>
+</section>
+{% endblock %}

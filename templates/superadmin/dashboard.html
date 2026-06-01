@@ -1,0 +1,190 @@
+{% extends "admin/base.html" %}
+
+{% block title %}SmartKart - Super Admin Dashboard{% endblock %}
+
+{% block content %}
+<section class="superadmin-hero">
+    <div>
+        <p class="eyebrow">SmartKart Command Center</p>
+        <h1>Marketplace Overview</h1>
+        <p>Track platform revenue, admin performance, order movement, and catalog scale from one owner workspace.</p>
+        <div class="hero-actions">
+            <a class="btn" href="{{ url_for('superadmin_orders') }}">Review Orders</a>
+            <a class="btn btn-secondary" href="{{ url_for('superadmin_revenue') }}">Revenue Report</a>
+        </div>
+    </div>
+    <div class="superadmin-hero-panel">
+        <span class="metric-label">Paid Revenue</span>
+        <strong>&#8377;{{ total_revenue }}</strong>
+        <p>{{ paid_orders }} paid orders across {{ total_products }} listed products.</p>
+    </div>
+</section>
+
+<section class="superadmin-kpi-grid">
+    <article class="superadmin-kpi">
+        <span class="metric-label">Total Revenue</span>
+        <strong>&#8377;{{ total_revenue }}</strong>
+        <p>Completed paid order value</p>
+    </article>
+    <article class="superadmin-kpi">
+        <span class="metric-label">Orders</span>
+        <strong>{{ total_orders }}</strong>
+        <p>{{ paid_orders }} paid orders recorded</p>
+    </article>
+    <article class="superadmin-kpi">
+        <span class="metric-label">Admins</span>
+        <strong>{{ total_admins }}</strong>
+        <p>{{ pending_admins }} pending approvals</p>
+    </article>
+    <article class="superadmin-kpi">
+        <span class="metric-label">Catalog</span>
+        <strong>{{ total_products }}</strong>
+        <p>Products listed globally</p>
+    </article>
+</section>
+
+<section class="superadmin-layout">
+    <article class="table-card superadmin-chart-card">
+        <div class="panel-head">
+            <div>
+                <p class="eyebrow">Sales Pulse</p>
+                <h2>7-Day Revenue</h2>
+            </div>
+            <a class="show-more" href="{{ url_for('superadmin_revenue') }}">Details</a>
+        </div>
+        {% if sales_chart %}
+            <div class="revenue-chart" aria-label="Revenue chart">
+                {% for point in sales_chart %}
+                    <div class="revenue-bar-item">
+                        <div class="revenue-bar-track">
+                            <span class="revenue-bar" style="height: {{ point.height }}%;"></span>
+                        </div>
+                        <strong>&#8377;{{ point.revenue }}</strong>
+                        <span>{{ point.label }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state compact-empty">
+                <h3>No revenue yet</h3>
+                <p>Paid order activity will appear here.</p>
+            </div>
+        {% endif %}
+    </article>
+
+    <article class="table-card">
+        <div class="panel-head">
+            <div>
+                <p class="eyebrow">Order Health</p>
+                <h2>Status Breakdown</h2>
+            </div>
+            <a class="show-more" href="{{ url_for('superadmin_orders') }}">View All</a>
+        </div>
+        <div class="status-chart">
+            {% for row in status_rows %}
+                {% set percent = ((row.total / total_orders) * 100) if total_orders else 0 %}
+                <div class="status-chart-row">
+                    <div>
+                        <strong>{{ row.status }}</strong>
+                        <span>{{ row.total }} orders</span>
+                    </div>
+                    <div class="status-meter" aria-label="{{ row.status }} {{ percent|round(0) }} percent">
+                        <span style="width: {{ percent }}%;"></span>
+                    </div>
+                </div>
+            {% else %}
+                <div class="empty-state compact-empty">
+                    <h3>No orders yet</h3>
+                    <p>Status metrics will appear after checkout.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </article>
+</section>
+
+<section class="superadmin-action-grid">
+    <a class="card role-card" href="{{ url_for('superadmin_admins') }}">
+        <span class="role-icon">A</span>
+        <h3>Admin Approvals</h3>
+        <p>Review seller access and approval requests.</p>
+        <span class="text-link">Manage admins</span>
+    </a>
+    <a class="card role-card" href="{{ url_for('superadmin_products') }}">
+        <span class="role-icon">P</span>
+        <h3>Global Catalog</h3>
+        <p>Inspect products listed by every admin.</p>
+        <span class="text-link">View products</span>
+    </a>
+    <a class="card role-card" href="{{ url_for('superadmin_orders') }}">
+        <span class="role-icon">O</span>
+        <h3>Order Operations</h3>
+        <p>Monitor customer orders and fulfillment status.</p>
+        <span class="text-link">View orders</span>
+    </a>
+    <a class="card role-card" href="{{ url_for('superadmin_revenue') }}">
+        <span class="role-icon">R</span>
+        <h3>Revenue</h3>
+        <p>Compare paid revenue by admin ownership.</p>
+        <span class="text-link">Open report</span>
+    </a>
+</section>
+
+<section class="superadmin-layout">
+    <article class="table-card">
+        <div class="panel-head">
+            <div>
+                <p class="eyebrow">Seller Performance</p>
+                <h2>Top Admins</h2>
+            </div>
+            <a class="show-more" href="{{ url_for('superadmin_admins') }}">Admins</a>
+        </div>
+        <div class="leaderboard">
+            {% for admin in top_admins %}
+                <div class="leaderboard-row">
+                    <span class="leaderboard-rank">{{ loop.index }}</span>
+                    <div>
+                        <strong>{{ admin.admin_name }}</strong>
+                        <p>{{ admin.products }} products &middot; {{ admin.orders }} orders</p>
+                    </div>
+                    <span>&#8377;{{ admin.revenue }}</span>
+                </div>
+            {% else %}
+                <div class="empty-state compact-empty">
+                    <h3>No admin sales yet</h3>
+                    <p>Revenue leaders will appear after paid orders.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </article>
+
+    <article class="table-card">
+        <div class="panel-head">
+            <div>
+                <p class="eyebrow">Latest Activity</p>
+                <h2>Recent Orders</h2>
+            </div>
+            <a class="show-more" href="{{ url_for('superadmin_orders') }}">Orders</a>
+        </div>
+        <div class="superadmin-order-list">
+            {% for order in recent_orders %}
+                <div class="superadmin-order-row">
+                    <div>
+                        <strong>#{{ order.order_id }} &middot; {{ order.username or 'Unknown User' }}</strong>
+                        <p>{{ order.created_at }}</p>
+                    </div>
+                    <div>
+                        <span class="status-badge paid">{{ order.payment_status }}</span>
+                        <span class="status-badge status-{{ (order.order_status or 'Pending')|lower }}">{{ order.order_status or 'Pending' }}</span>
+                        <strong>&#8377;{{ order.amount }}</strong>
+                    </div>
+                </div>
+            {% else %}
+                <div class="empty-state compact-empty">
+                    <h3>No orders found</h3>
+                    <p>Recent platform orders will appear here.</p>
+                </div>
+            {% endfor %}
+        </div>
+    </article>
+</section>
+{% endblock %}

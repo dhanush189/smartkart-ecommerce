@@ -1,0 +1,59 @@
+{% extends "admin/base.html" %}
+
+{% block title %}SmartKart - Select Delivery Address{% endblock %}
+
+{% block content %}
+<section class="section-head">
+    <div>
+        <p class="eyebrow">Checkout</p>
+        <h2>Select Delivery Address</h2>
+        <p>Choose a saved address or add a new one for delivery.</p>
+    </div>
+    <a class="btn btn-secondary" href="/user/cart">← Back to Cart</a>
+</section>
+
+<form method="GET" action="/user/pay" id="address-form">
+
+    <div class="address-grid">
+        {% for addr in addresses %}
+        <label class="address-card" for="addr-{{ addr.address_id }}">
+            <input type="radio" name="address_id" value="{{ addr.address_id }}" id="addr-{{ addr.address_id }}" class="address-radio" {% if loop.first %}checked{% endif %}>
+            <div class="address-card-header">
+                <h3>{{ addr.full_name }}</h3>
+                <div class="address-card-actions">
+                    <a href="/user/edit-address/{{ addr.address_id }}" class="edit-link">Edit</a>
+                    <a href="/user/delete-address/{{ addr.address_id }}" class="delete-link" onclick="return confirm('Delete this address?')">Delete</a>
+                </div>
+            </div>
+            <p>{{ addr.address_line }}</p>
+            <p>{{ addr.city }}, {{ addr.state }} - {{ addr.pincode }}</p>
+            <p class="phone">📞 {{ addr.phone }}</p>
+        </label>
+        {% endfor %}
+
+        <!-- Add New Address Card -->
+        <a href="/user/add-address" class="add-address-card">
+            <div class="plus-icon">+</div>
+            <span style="font-weight:600;">Add New Address</span>
+        </a>
+    </div>
+
+    {% if addresses %}
+    <div class="checkout-bar">
+        <div class="cart-total">
+            Total: <span style="color:var(--primary);">₹{{ grand_total }}</span>
+        </div>
+        <div class="actions">
+            <a class="btn btn-secondary" href="/user/products">Continue Shopping</a>
+            <button type="submit" style="border-radius:var(--radius-full);">Proceed to Payment →</button>
+        </div>
+    </div>
+    {% else %}
+    <div class="card" style="text-align:center; padding:32px;">
+        <p style="margin-bottom:16px;">Please add a delivery address to proceed.</p>
+        <a class="btn" href="/user/add-address">+ Add Address</a>
+    </div>
+    {% endif %}
+
+</form>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends "admin/base.html" %}
+
+{% block title %}SmartKart - My Orders{% endblock %}
+
+{% block content %}
+<section class="section-head">
+    <div>
+        <p class="eyebrow">Customer Orders</p>
+        <h2>My Orders</h2>
+        <p>Review your purchases, download invoices, and check payment status.</p>
+    </div>
+    <a class="btn btn-secondary" href="{{ url_for('user_products') }}">Continue Shopping</a>
+</section>
+
+{% if orders|length == 0 %}
+    <div class="empty-state">
+        <h3>No orders yet</h3>
+        <p>You have not placed any orders yet.</p>
+        <a href="{{ url_for('user_products') }}" class="btn" style="margin-top:16px;">Start Shopping</a>
+    </div>
+{% else %}
+    <section class="table-card">
+        <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Order</th>
+                        <th>Amount</th>
+                        <th>Payment</th>
+                        <th>Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for order in orders %}
+                        <tr>
+                            <td><strong>#{{ order.order_id }}</strong></td>
+                            <td>&#8377;{{ order.amount }}</td>
+                            <td><span class="status-badge paid">{{ order.payment_status }}</span></td>
+                            <td>{{ order.created_at }}</td>
+                            <td>
+                                <div class="actions" style="margin-top:0;">
+                                    <a href="{{ url_for('download_invoice', order_id=order.order_id) }}" class="btn btn-secondary" style="font-size:0.8rem; padding:8px 14px;">Invoice</a>
+                                    <a href="{{ url_for('order_success', order_db_id=order.order_id) }}" class="btn" style="font-size:0.8rem; padding:8px 14px;">Details</a>
+                                </div>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+{% endif %}
+{% endblock %}

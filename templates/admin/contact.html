@@ -1,0 +1,52 @@
+{% extends "admin/base.html" %}
+
+{% block title %}SmartKart - Contact{% endblock %}
+
+{% block content %}
+<section class="section-head">
+    <div>
+        <p class="eyebrow">Contact</p>
+        <h2>Need help with SmartKart?</h2>
+        <p>Use the details below or send a message through the contact form.</p>
+    </div>
+</section>
+
+<section class="info-grid">
+    <article class="card">
+        <h3>📧 Email</h3>
+        <p>support@smartkart.local</p>
+    </article>
+    <article class="card">
+        <h3>🕐 Availability</h3>
+        <p>Monday to Saturday, 9:00 AM to 6:00 PM.</p>
+    </article>
+    <article class="card">
+        <h3>👥 Built For</h3>
+        <p>Admins, product managers, and small ecommerce teams.</p>
+    </article>
+</section>
+
+<section class="form-card wide" style="margin-top:32px;">
+    <p class="eyebrow">Send Message</p>
+    <h2>Contact Form</h2>
+    <form method="POST" action="{{ url_for('contact') }}">
+        <div class="form-grid">
+            <div class="field">
+                <label for="contact_name">Name</label>
+                <input id="contact_name" type="text" name="name" placeholder="Your name" required>
+            </div>
+            <div class="field">
+                <label for="contact_email">Email</label>
+                <input id="contact_email" type="email" name="email" placeholder="you@example.com" required>
+            </div>
+            <div class="field full">
+                <label for="contact_message">Message</label>
+                <textarea id="contact_message" name="message" placeholder="How can we help?" required></textarea>
+            </div>
+        </div>
+        <div class="form-actions">
+            <button type="submit">Send Message</button>
+        </div>
+    </form>
+</section>
+{% endblock %}

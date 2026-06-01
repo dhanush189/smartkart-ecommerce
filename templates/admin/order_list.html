@@ -1,0 +1,60 @@
+{% extends "admin/base.html" %}
+
+{% block title %}SmartKart - Admin Orders{% endblock %}
+
+{% block content %}
+<section class="section-head">
+    <div>
+        <p class="eyebrow">Admin Panel</p>
+        <h2>All Customer Orders</h2>
+        <p>View orders, customer details, payment status, and delivery progress.</p>
+    </div>
+    <a class="btn btn-secondary" href="{{ url_for('admin_dashboard') }}">Back to Dashboard</a>
+</section>
+
+<section class="table-card">
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Customer</th>
+                    <th>Items</th>
+                    <th>Amount</th>
+                    <th>Payment</th>
+                    <th>Delivery</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                    <tr>
+                        <td><strong>#{{ order.order_id }}</strong></td>
+                        <td>
+                            <strong>{{ order.username or 'Unknown User' }}</strong>
+                            <p style="margin:2px 0 0;">{{ order.user_email or 'No email' }}</p>
+                        </td>
+                        <td>{{ order.item_count }}</td>
+                        <td><strong>&#8377;{{ order.amount }}</strong></td>
+                        <td><span class="status-badge paid">{{ order.payment_status }}</span></td>
+                        <td>
+                            <span class="status-badge status-{{ (order.order_status or 'Pending')|lower }}">
+                                {{ order.order_status or 'Pending' }}
+                            </span>
+                        </td>
+                        <td>{{ order.created_at }}</td>
+                        <td>
+                            <a class="btn btn-secondary" href="{{ url_for('admin_order_details', order_id=order.order_id) }}">View Details</a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="8" style="text-align:center; padding:40px;">No orders found yet.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

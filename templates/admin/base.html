@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}SmartKart{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <header class="site-header">
+        <nav class="navbar">
+            <a class="brand" href="{% if session.get('user_id') %}{{ url_for('user_dashboard') }}{% elif session.get('admin_id') %}{{ url_for('admin_dashboard') }}{% elif session.get('superadmin_id') %}{{ url_for('superadmin_dashboard') }}{% else %}{{ url_for('home') }}{% endif %}">
+                <span class="brand-mark">SK</span>
+                <span>SmartKart</span>
+            </a>
+
+            <input class="nav-toggle" type="checkbox" id="nav-toggle">
+            <label class="nav-toggle-label" for="nav-toggle" aria-label="Open navigation">
+                <span></span>
+                <span></span>
+                <span></span>
+            </label>
+
+            <div class="nav-links">
+
+    {% if session.get('superadmin_id') %}
+
+        <a href="{{ url_for('superadmin_dashboard') }}"
+           class="{% if request.endpoint == 'superadmin_dashboard' %}active{% endif %}">
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('superadmin_admins') }}"
+           class="{% if request.endpoint == 'superadmin_admins' %}active{% endif %}">
+            Admins
+        </a>
+
+        <a href="{{ url_for('superadmin_products') }}"
+           class="{% if request.endpoint == 'superadmin_products' %}active{% endif %}">
+            Products
+        </a>
+
+        <a href="{{ url_for('superadmin_orders') }}"
+           class="{% if request.endpoint == 'superadmin_orders' %}active{% endif %}">
+            Orders
+        </a>
+
+        <a href="{{ url_for('superadmin_revenue') }}"
+           class="{% if request.endpoint == 'superadmin_revenue' %}active{% endif %}">
+            Revenue
+        </a>
+
+        <a class="nav-cta" href="{{ url_for('superadmin_logout') }}">
+            Logout
+        </a>
+
+    {% elif session.get('admin_id') %}
+
+        <a href="{{ url_for('admin_dashboard') }}"
+           class="{% if request.endpoint == 'admin_dashboard' %}active{% endif %}">
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('item_list') }}"
+           class="{% if request.endpoint == 'item_list' %}active{% endif %}">
+            Products
+        </a>
+
+        <a href="{{ url_for('admin_orders') }}"
+           class="{% if request.endpoint in ['admin_orders', 'admin_order_details'] %}active{% endif %}">
+            Orders
+        </a>
+
+        <a href="{{ url_for('admin_profile') }}"
+           class="{% if request.endpoint == 'admin_profile' %}active{% endif %}">
+            Profile
+        </a>
+
+        {% set cart_items = session.get('cart', {}) %}
+        {% set cart_counter = namespace(total=0) %}
+        {% for cart_item in cart_items.values() %}
+            {% set cart_counter.total = cart_counter.total + cart_item.quantity %}
+        {% endfor %}
+        {% set cart_count = cart_counter.total %}
+        <a href="{{ url_for('view_cart') }}"
+           class="cart-icon-link {% if request.endpoint == 'view_cart' %}active{% endif %}"
+           aria-label="Cart with {{ cart_count }} products"
+           title="Cart">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+            </svg>
+            <span class="cart-badge">{{ cart_count }}</span>
+        </a>
+
+        <a class="nav-cta" href="{{ url_for('admin_logout') }}">
+            Logout
+        </a>
+
+    {% elif session.get('user_id') %}
+
+        <a href="{{ url_for('user_dashboard') }}"
+           class="{% if request.endpoint == 'user_dashboard' %}active{% endif %}">
+            Home
+        </a>
+
+        <a href="{{ url_for('user_products') }}"
+           class="{% if request.endpoint in ['user_products', 'user_product_details'] %}active{% endif %}">
+            Shop
+        </a>
+
+        <a href="{{ url_for('my_orders') }}"
+           class="{% if request.endpoint in ['my_orders', 'order_success'] %}active{% endif %}">
+            My Orders
+        </a>
+
+        <!-- Cart Icon with Badge -->
+        {% set cart_items = session.get('cart', {}) %}
+        {% set cart_counter = namespace(total=0) %}
+        {% for cart_item in cart_items.values() %}
+            {% set cart_counter.total = cart_counter.total + cart_item.quantity %}
+        {% endfor %}
+        {% set cart_count = cart_counter.total %}
+        <a href="{{ url_for('view_cart') }}"
+           class="cart-icon-link {% if request.endpoint == 'view_cart' %}active{% endif %}"
+           aria-label="Cart with {{ cart_count }} products"
+           title="Cart">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
+            </svg>
+            <span class="cart-badge">{{ cart_count }}</span>
+        </a>
+
+        <a class="nav-cta" href="{{ url_for('user_logout') }}">
+            Logout
+        </a>
+
+    {% else %}
+
+        <a href="{{ url_for('home') }}"
+           class="{% if request.endpoint == 'home' %}active{% endif %}">
+            Home
+        </a>
+
+        <a href="{{ url_for('about') }}"
+           class="{% if request.endpoint == 'about' %}active{% endif %}">
+            About
+        </a>
+
+        <a href="{{ url_for('contact') }}"
+           class="{% if request.endpoint == 'contact' %}active{% endif %}">
+            Contact
+        </a>
+
+        <a href="{{ url_for('user_login') }}"
+           class="{% if request.endpoint == 'user_login' %}active{% endif %}">
+            User Login
+        </a>
+
+        <a href="{{ url_for('admin_login') }}"
+           class="{% if request.endpoint == 'admin_login' %}active{% endif %}">
+            Admin Login
+        </a>
+
+        <a href="{{ url_for('superadmin_login') }}"
+           class="{% if request.endpoint == 'superadmin_login' %}active{% endif %}">
+            Super Admin
+        </a>
+
+        <a class="nav-cta" href="{{ url_for('user_register') }}">
+            Sign Up
+        </a>
+
+    {% endif %}
+
+</div>
+        </nav>
+    </header>
+
+    <main class="page-shell {% block shell_class %}{% endblock %}">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-stack">
+                    {% for category, message in messages %}
+                        <div class="flash flash-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="footer-grid">
+            <div>
+                <div class="footer-brand">SmartKart</div>
+                <p class="footer-copy">&copy; 2026 SmartKart. All Rights Reserved.</p>
+                <p class="footer-copy" style="margin-top:4px;">Developed by <strong>Dhanush</strong></p>
+            </div>
+            <div class="footer-col">
+                <h4>Quick Links</h4>
+                <a href="{{ url_for('home') }}">Home</a>
+                <a href="{{ url_for('about') }}">About</a>
+                <a href="{{ url_for('contact') }}">Contact</a>
+                <a href="{{ url_for('user_login') }}">Shop</a>
+            </div>
+            <div class="footer-col">
+                <h4>Resources</h4>
+                <a href="{{ url_for('user_register') }}">Create Account</a>
+                <a href="{{ url_for('admin_login') }}">Admin Portal</a>
+                <a href="{{ url_for('contact') }}">Help & Support</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="social-links">
+                <a href="#" aria-label="Instagram">📷</a>
+                <a href="#" aria-label="Twitter">🐦</a>
+                <a href="#" aria-label="Facebook">📘</a>
+            </div>
+            <p class="footer-copy">Email: support@smartkart.com &bull; Phone: +91 9959596804</p>
+        </div>
+    </footer>
+    <script>
+        document.querySelectorAll('[data-deal-carousel]').forEach((carousel) => {
+            const slides = Array.from(carousel.querySelectorAll('.deal-slide'));
+            const prev = carousel.querySelector('[data-carousel-prev]');
+            const next = carousel.querySelector('[data-carousel-next]');
+            let activeIndex = slides.findIndex((slide) => slide.classList.contains('active'));
+
+            if (!slides.length) return;
+            if (activeIndex < 0) activeIndex = 0;
+
+            const showSlide = (index) => {
+                activeIndex = (index + slides.length) % slides.length;
+                slides.forEach((slide, slideIndex) => {
+                    slide.classList.toggle('active', slideIndex === activeIndex);
+                });
+            };
+
+            prev?.addEventListener('click', () => showSlide(activeIndex - 1));
+            next?.addEventListener('click', () => showSlide(activeIndex + 1));
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,295 @@
+{% extends "admin/base.html" %}
+
+{% block title %}SmartKart - Your Smart Shopping Destination{% endblock %}
+
+{% block content %}
+{% set user_logged_in = session.get('user_id') %}
+{% set shop_link = url_for('user_products') if user_logged_in else url_for('user_login') %}
+<section class="deal-carousel" data-deal-carousel>
+    <button class="deal-arrow deal-arrow-left" type="button" data-carousel-prev aria-label="Previous deal">&lsaquo;</button>
+    <div class="deal-slides">
+        {% if products %}
+            {% for product in products[:5] %}
+                {% set product_url = url_for('user_product_details', product_id=product.product_id) %}
+                {% set login_product_url = url_for('user_login', next=product_url) %}
+                <article class="deal-hero deal-slide deal-bg-{{ loop.index }} {% if loop.first %}active{% endif %}">
+                    <div class="deal-copy">
+                        <p>{{ product.category }}</p>
+                        <h1>Under &#8377;399</h1>
+                        <div class="deal-tags">
+                            <span>TOP<br>BRANDS</span>
+                            <span>LATEST<br>TRENDS</span>
+                        </div>
+                        <div class="deal-actions">
+                            <a class="btn" href="{{ shop_link }}">Shop Now</a>
+                            {% if user_logged_in %}
+                                <a class="btn btn-secondary" href="{{ url_for('view_cart') }}">View Cart</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <a class="deal-image" href="{% if user_logged_in %}{{ product_url }}{% else %}{{ login_product_url }}{% endif %}">
+                        <img src="{{ url_for('static', filename='uploads/product_images/' ~ product.image) }}" alt="{{ product.name }}">
+                    </a>
+                </article>
+            {% endfor %}
+        {% else %}
+            <article class="deal-hero deal-slide deal-bg-1 active">
+                <div class="deal-copy">
+                    <p>Bestselling products</p>
+                    <h1>Under &#8377;399</h1>
+                    <div class="deal-tags">
+                        <span>TOP<br>BRANDS</span>
+                        <span>LATEST<br>TRENDS</span>
+                    </div>
+                    <div class="deal-actions">
+                        <a class="btn" href="{{ shop_link }}">Shop Now</a>
+                        {% if user_logged_in %}
+                            <a class="btn btn-secondary" href="{{ url_for('view_cart') }}">View Cart</a>
+                        {% endif %}
+                    </div>
+                </div>
+                <a class="deal-image" href="{{ shop_link }}">
+                    <div class="deal-image-fallback">SK</div>
+                </a>
+            </article>
+        {% endif %}
+    </div>
+    <button class="deal-arrow deal-arrow-right" type="button" data-carousel-next aria-label="Next deal">&rsaquo;</button>
+</section>
+
+<section class="deal-hero public-home-hero">
+    <a class="deal-arrow" href="{{ url_for('user_login') }}" aria-label="Previous deal">‹</a>
+    <div class="deal-copy">
+        <p>Bestselling products</p>
+        <h1>Under ₹399</h1>
+        <div class="deal-tags">
+            <span>TOP<br>BRANDS</span>
+            <span>LATEST<br>TRENDS</span>
+        </div>
+        <div class="deal-actions">
+            <a class="btn" href="{{ url_for('user_login') }}">Shop Now</a>
+            <a class="btn btn-secondary" href="{{ url_for('about') }}">About</a>
+        </div>
+    </div>
+    <a class="deal-image" href="{{ url_for('user_login') }}">
+        {% if products %}
+            <img src="{{ url_for('static', filename='uploads/product_images/' ~ products[0].image) }}" alt="{{ products[0].name }}">
+        {% else %}
+            <div class="deal-image-fallback">SK</div>
+        {% endif %}
+    </a>
+    <a class="deal-arrow" href="{{ url_for('user_login') }}" aria-label="Next deal">›</a>
+</section>
+
+{% if products %}
+<section>
+    <div class="section-head">
+        <h2 class="section-title">Latest Products</h2>
+        <a href="{{ shop_link }}" class="show-more">Shop All</a>
+    </div>
+
+    <div class="product-rail auto-product-rail" aria-label="Latest products">
+        <div class="auto-product-track">
+            {% for product in products %}
+                {% set product_url = url_for('user_product_details', product_id=product.product_id) %}
+                {% set login_product_url = url_for('user_login', next=product_url) %}
+                <article class="product-card product-rail-card">
+                    <a href="{% if user_logged_in %}{{ product_url }}{% else %}{{ login_product_url }}{% endif %}">
+                        <img src="{{ url_for('static', filename='uploads/product_images/' ~ product.image) }}" alt="{{ product.name }}">
+                    </a>
+                    <div class="product-card-body">
+                        <p class="product-name">{{ product.name }}</p>
+                        <p class="product-category">{{ product.category }}</p>
+                        <p class="product-price">&#8377;{{ product.price }}</p>
+                        <a class="text-link" href="{% if user_logged_in %}{{ product_url }}{% else %}{{ login_product_url }}{% endif %}">View</a>
+                    </div>
+                </article>
+            {% endfor %}
+            {% for product in products %}
+                {% set product_url = url_for('user_product_details', product_id=product.product_id) %}
+                {% set login_product_url = url_for('user_login', next=product_url) %}
+                <article class="product-card product-rail-card" aria-hidden="true">
+                    <a href="{% if user_logged_in %}{{ product_url }}{% else %}{{ login_product_url }}{% endif %}" tabindex="-1">
+                        <img src="{{ url_for('static', filename='uploads/product_images/' ~ product.image) }}" alt="">
+                    </a>
+                    <div class="product-card-body">
+                        <p class="product-name">{{ product.name }}</p>
+                        <p class="product-category">{{ product.category }}</p>
+                        <p class="product-price">&#8377;{{ product.price }}</p>
+                        <a class="text-link" href="{% if user_logged_in %}{{ product_url }}{% else %}{{ login_product_url }}{% endif %}" tabindex="-1">View</a>
+                    </div>
+                </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<section>
+    <div class="section-head">
+        <h2 class="section-title">Trending Categories</h2>
+        <a href="{{ shop_link }}" class="show-more">Shop All</a>
+    </div>
+    <div class="categories-scroll">
+        <a class="category-item icon-only-category" href="{% if user_logged_in %}{{ url_for('user_products', category='Mobiles') }}{% else %}{{ url_for('user_login') }}{% endif %}" aria-label="Mobiles" title="Mobiles">
+            <div class="category-icon">📱</div>
+        </a>
+        <a class="category-item icon-only-category" href="{% if user_logged_in %}{{ url_for('user_products', category='Laptops') }}{% else %}{{ url_for('user_login') }}{% endif %}" aria-label="Laptops" title="Laptops">
+            <div class="category-icon">💻</div>
+        </a>
+        <a class="category-item icon-only-category" href="{% if user_logged_in %}{{ url_for('user_products', category='Headphones') }}{% else %}{{ url_for('user_login') }}{% endif %}" aria-label="Headphones" title="Headphones">
+            <div class="category-icon">🎧</div>
+        </a>
+        <a class="category-item icon-only-category" href="{% if user_logged_in %}{{ url_for('user_products', category='Monitors & TVs') }}{% else %}{{ url_for('user_login') }}{% endif %}" aria-label="Monitors and TVs" title="Monitors & TVs">
+            <div class="category-icon">🖥️</div>
+        </a>
+        <a class="category-item icon-only-category" href="{% if user_logged_in %}{{ url_for('user_products', category='Smartwatches') }}{% else %}{{ url_for('user_login') }}{% endif %}" aria-label="Smartwatches" title="Smartwatches">
+            <div class="category-icon">⌚</div>
+        </a>
+        <a class="category-item icon-only-category" href="{% if user_logged_in %}{{ url_for('user_products', category='Cameras') }}{% else %}{{ url_for('user_login') }}{% endif %}" aria-label="Cameras" title="Cameras">
+            <div class="category-icon">📷</div>
+        </a>
+        <a class="category-item icon-only-category" href="{% if user_logged_in %}{{ url_for('user_products', category='Gaming') }}{% else %}{{ url_for('user_login') }}{% endif %}" aria-label="Gaming" title="Gaming">
+            <div class="category-icon">🎮</div>
+        </a>
+        <a class="category-item icon-only-category" href="{% if user_logged_in %}{{ url_for('user_products', category='Speakers') }}{% else %}{{ url_for('user_login') }}{% endif %}" aria-label="Speakers" title="Speakers">
+            <div class="category-icon">🔊</div>
+        </a>
+    </div>
+</section>
+
+<div class="promo-grid">
+    <div class="promo-card">
+        <h3>Top Brands</h3>
+        <p class="promo-sub">Selected items and popular products in one place.</p>
+        <a class="btn" href="{{ shop_link }}">Shop Now</a>
+    </div>
+    <div class="promo-card promo-card-alt">
+        <h3>New Arrivals</h3>
+        <p class="promo-sub">Freshly added products from SmartKart sellers.</p>
+        <a class="btn" href="{{ url_for('user_register') }}">Create Account</a>
+    </div>
+</div>
+
+<section>
+    <div class="section-head">
+        <div>
+            <p class="eyebrow">Product Catalog</p>
+            <h2 class="section-title">All Products</h2>
+        </div>
+        <a href="{% if user_logged_in %}{{ url_for('view_cart') }}{% else %}{{ url_for('user_login') }}{% endif %}" class="show-more">{% if user_logged_in %}Cart{% else %}Login to Buy{% endif %}</a>
+    </div>
+
+    {% if products %}
+        <div class="public-product-grid">
+            {% for product in products %}
+                {% set product_url = url_for('user_product_details', product_id=product.product_id) %}
+                {% set login_product_url = url_for('user_login', next=product_url) %}
+                <article class="product-card">
+                    <a href="{% if user_logged_in %}{{ product_url }}{% else %}{{ login_product_url }}{% endif %}">
+                        <img src="{{ url_for('static', filename='uploads/product_images/' ~ product.image) }}" alt="{{ product.name }}">
+                    </a>
+                    <div class="product-card-body">
+                        <div class="product-stars">
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star">★</span>
+                            <span class="star empty">★</span>
+                        </div>
+                        <p class="product-name">{{ product.name }}</p>
+                        <p class="product-category">{{ product.category }}</p>
+                        <p class="product-price">&#8377;{{ product.price }}</p>
+                        <div class="actions compact-actions">
+                            {% if user_logged_in %}
+                                <a class="btn" href="{{ url_for('buy_now', product_id=product.product_id) }}">Buy Now</a>
+                                <a class="btn btn-secondary" href="{{ url_for('add_to_cart', product_id=product.product_id) }}">Add to Cart</a>
+                            {% else %}
+                                <a class="btn" href="{{ login_product_url }}">Buy Now</a>
+                                <a class="btn btn-secondary" href="{{ login_product_url }}">Add to Cart</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </article>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="empty-state">
+            <h3>No products available</h3>
+            <p>Products added by admins will appear here.</p>
+        </div>
+    {% endif %}
+</section>
+
+<section>
+    <div class="section-head">
+        <h2 class="section-title">Choose Your Portal</h2>
+    </div>
+
+    <div class="feature-grid">
+        <a class="card role-card" href="{{ url_for('user_login') }}">
+            <span class="role-icon">U</span>
+            <h3>User Login</h3>
+            <p>Browse products, add items to cart, checkout, and track orders.</p>
+            <span class="text-link">Open user portal</span>
+        </a>
+        <a class="card role-card" href="{{ url_for('admin_login') }}">
+            <span class="role-icon">A</span>
+            <h3>Admin Login</h3>
+            <p>Manage products, images, categories, prices, and orders.</p>
+            <span class="text-link">Open admin portal</span>
+        </a>
+        <a class="card role-card" href="{{ url_for('superadmin_login') }}">
+            <span class="role-icon">S</span>
+            <h3>Super Admin Login</h3>
+            <p>Owner access for admins, all products, platform orders, and revenue.</p>
+            <span class="text-link">Open owner portal</span>
+        </a>
+        <a class="card role-card" href="{{ url_for('user_register') }}">
+            <span class="role-icon">+</span>
+            <h3>New Customer</h3>
+            <p>Create a user account and start exploring SmartKart.</p>
+            <span class="text-link">Create account</span>
+        </a>
+    </div>
+</section>
+
+<section style="margin-top:48px;">
+    <div class="section-head">
+        <h2 class="section-title">Shopping Guides</h2>
+        <a href="{{ url_for('about') }}" class="show-more">Show More</a>
+    </div>
+    <div class="blog-grid">
+        <a class="blog-card" href="{{ url_for('about') }}">
+            <div class="blog-card-img guide-card-img">SK</div>
+            <div class="blog-card-body">
+                <h3>Smart Shopping Tips for 2026</h3>
+                <div class="blog-card-meta">
+                    <span>15th Jan 2026</span>
+                    <span>Read More</span>
+                </div>
+            </div>
+        </a>
+        <a class="blog-card" href="{{ url_for('user_login') }}">
+            <div class="blog-card-img guide-card-img green">TOP</div>
+            <div class="blog-card-body">
+                <h3>Top Must-Have Gadgets</h3>
+                <div class="blog-card-meta">
+                    <span>3rd Feb 2026</span>
+                    <span>Read More</span>
+                </div>
+            </div>
+        </a>
+        <a class="blog-card" href="{{ url_for('contact') }}">
+            <div class="blog-card-img guide-card-img blue">HELP</div>
+            <div class="blog-card-body">
+                <h3>How to Find the Best Deals</h3>
+                <div class="blog-card-meta">
+                    <span>1st Mar 2026</span>
+                    <span>Read More</span>
+                </div>
+            </div>
+        </a>
+    </div>
+</section>
+{% endblock %}

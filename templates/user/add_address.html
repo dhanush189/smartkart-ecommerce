@@ -1,0 +1,44 @@
+{% extends "admin/base.html" %}
+
+{% block title %}SmartKart - Add Address{% endblock %}
+
+{% block content %}
+<section class="form-card wide">
+    <p class="eyebrow">Delivery Address</p>
+    <h2>Add New Address</h2>
+    <p>Enter your delivery details below.</p>
+
+    <form method="POST" action="/user/add-address">
+        <div class="form-grid">
+            <div class="field">
+                <label for="full_name">Full Name</label>
+                <input id="full_name" type="text" name="full_name" placeholder="Recipient's full name" required>
+            </div>
+            <div class="field">
+                <label for="phone">Phone Number</label>
+                <input id="phone" type="tel" name="phone" placeholder="10-digit mobile number" required>
+            </div>
+            <div class="field full">
+                <label for="address_line">Address (House No, Street, Area)</label>
+                <textarea id="address_line" name="address_line" placeholder="Enter your complete address" style="min-height:80px;" required></textarea>
+            </div>
+            <div class="field">
+                <label for="city">City</label>
+                <input id="city" type="text" name="city" placeholder="e.g. Hyderabad" required>
+            </div>
+            <div class="field">
+                <label for="state">State</label>
+                <input id="state" type="text" name="state" placeholder="e.g. Telangana" required>
+            </div>
+            <div class="field">
+                <label for="pincode">Pincode</label>
+                <input id="pincode" type="text" name="pincode" placeholder="6-digit pincode" required>
+            </div>
+        </div>
+        <div class="form-actions">
+            <button type="submit">Save Address</button>
+            <a class="btn btn-secondary" href="/user/select-address">Cancel</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

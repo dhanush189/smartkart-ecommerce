@@ -1,0 +1,68 @@
+{% extends "admin/base.html" %}
+
+{% block title %}SmartKart - Payment{% endblock %}
+
+{% block content %}
+<section class="payment-card">
+    <div style="font-size:3rem; margin-bottom:8px;">&#128179;</div>
+    <p class="eyebrow">Checkout</p>
+    <h2>Complete Your Payment</h2>
+    <div class="payment-amount">&#8377;{{ amount }}</div>
+    <p style="margin-bottom:24px;">Click below to pay securely with Razorpay.</p>
+    <button id="rzp-button" style="width:100%; padding:14px; font-size:1rem; border-radius:var(--radius-full);">Pay Now</button>
+</section>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
+<script>
+var options = {
+    "key": "{{ key_id }}",
+    "amount": "{{ amount * 100 }}",
+    "currency": "INR",
+    "name": "SmartKart",
+    "description": "Order Payment",
+    "order_id": "{{ order_id }}",
+
+    "handler": function (response){
+        var form = document.createElement("form");
+        form.method = "POST";
+        form.action = "/verify-payment";
+
+        var fields = {
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_signature: response.razorpay_signature
+        };
+
+        for (var key in fields) {
+            if (fields.hasOwnProperty(key)) {
+                var input = document.createElement("input");
+                input.type = "hidden";
+                input.name = key;
+                input.value = fields[key];
+                form.appendChild(input);
+            }
+        }
+
+        document.body.appendChild(form);
+        form.submit();
+    },
+
+    "theme": {
+        "color": "#f47920"
+    }
+};
+
+var rzp = new Razorpay(options);
+
+rzp.on('payment.failed', function (response){
+    alert("Payment failed. Please try again.");
+    console.log(response.error);
+});
+
+document.getElementById('rzp-button').onclick = function(e){
+    rzp.open();
+    e.preventDefault();
+}
+</script>
+{% endblock %}

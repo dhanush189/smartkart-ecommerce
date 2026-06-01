@@ -1,0 +1,36 @@
+{% extends "admin/base.html" %}
+
+{% block title %}SmartKart - About{% endblock %}
+
+{% block content %}
+<section class="hero" style="background: var(--surface-alt);">
+    <div>
+        <p class="eyebrow">About SmartKart</p>
+        <h1>A simple ecommerce admin system built for clear product management.</h1>
+        <p>SmartKart brings the core admin workflow into one friendly interface: secure signup, login, product creation, catalog filtering, profile updates, and image uploads.</p>
+        <div class="hero-actions">
+            <a class="btn" href="{{ url_for('admin_login') }}">Start Managing</a>
+            <a class="btn btn-secondary" href="{{ url_for('contact') }}">Contact</a>
+        </div>
+    </div>
+    <div class="hero-panel">
+        <p class="eyebrow">Project Focus</p>
+        <p>This application is designed to be practical, smooth, and easy to extend with customer-facing pages, cart features, order management, and payment workflows later.</p>
+    </div>
+</section>
+
+<section class="info-grid">
+    <article class="card">
+        <h3>Purpose</h3>
+        <p>Give admins an easy place to manage ecommerce products without a confusing interface.</p>
+    </article>
+    <article class="card">
+        <h3>Security</h3>
+        <p>Admin accounts use OTP verification and hashed passwords for safer access.</p>
+    </article>
+    <article class="card">
+        <h3>Design</h3>
+        <p>Clean modern design, readable spacing, and smooth hover effects keep the app approachable.</p>
+    </article>
+</section>
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends "admin/base.html" %}
+
+{% block title %}SmartKart - Edit Address{% endblock %}
+
+{% block content %}
+<section class="form-card wide">
+    <p class="eyebrow">Edit Address</p>
+    <h2>Update Delivery Address</h2>
+    <p>Modify your address details below.</p>
+
+    <form method="POST" action="/user/edit-address/{{ address.address_id }}">
+        <div class="form-grid">
+            <div class="field">
+                <label for="full_name">Full Name</label>
+                <input id="full_name" type="text" name="full_name" value="{{ address.full_name }}" required>
+            </div>
+            <div class="field">
+                <label for="phone">Phone Number</label>
+                <input id="phone" type="tel" name="phone" value="{{ address.phone }}" required>
+            </div>
+            <div class="field full">
+                <label for="address_line">Address (House No, Street, Area)</label>
+                <textarea id="address_line" name="address_line" style="min-height:80px;" required>{{ address.address_line }}</textarea>
+            </div>
+            <div class="field">
+                <label for="city">City</label>
+                <input id="city" type="text" name="city" value="{{ address.city }}" required>
+            </div>
+            <div class="field">
+                <label for="state">State</label>
+                <input id="state" type="text" name="state" value="{{ address.state }}" required>
+            </div>
+            <div class="field">
+                <label for="pincode">Pincode</label>
+                <input id="pincode" type="text" name="pincode" value="{{ address.pincode }}" required>
+            </div>
+        </div>
+        <div class="form-actions">
+            <button type="submit">Update Address</button>
+            <a class="btn btn-secondary" href="/user/select-address">Cancel</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

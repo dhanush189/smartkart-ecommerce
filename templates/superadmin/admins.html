@@ -1,0 +1,60 @@
+{% extends "admin/base.html" %}
+
+{% block title %}SmartKart - Super Admin Admins{% endblock %}
+
+{% block content %}
+<section class="section-head">
+    <div>
+        <p class="eyebrow">Super Admin</p>
+        <h2>Admins</h2>
+        <p>Review all admins and approve or reject account access.</p>
+    </div>
+    <a class="btn btn-secondary" href="{{ url_for('superadmin_dashboard') }}">Dashboard</a>
+</section>
+
+<section class="table-card">
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Admin</th>
+                    <th>Email</th>
+                    <th>Products</th>
+                    <th>Status</th>
+                    <th>Update</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for admin in admins %}
+                    <tr>
+                        <td>{{ admin.admin_id }}</td>
+                        <td><strong>{{ admin.name }}</strong></td>
+                        <td>{{ admin.email }}</td>
+                        <td>{{ admin.product_count }}</td>
+                        <td>
+                            <span class="status-badge status-{{ admin.approval_status }}">
+                                {{ admin.approval_status }}
+                            </span>
+                        </td>
+                        <td>
+                            <form class="status-form" method="POST" action="{{ url_for('superadmin_update_admin_status', admin_id=admin.admin_id) }}">
+                                <select name="approval_status">
+                                    {% for status in statuses %}
+                                        <option value="{{ status }}" {% if admin.approval_status == status %}selected{% endif %}>{{ status|title }}</option>
+                                    {% endfor %}
+                                </select>
+                                <button type="submit">Save</button>
+                            </form>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="6" style="text-align:center; padding:40px;">No admins found.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

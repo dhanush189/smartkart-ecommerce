@@ -1,0 +1,24 @@
+{% extends "admin/base.html" %}
+
+{% block title %}SmartKart - Product Details{% endblock %}
+
+{% block content %}
+<section class="product-detail">
+    <div class="card" style="padding:0; overflow:hidden;">
+        <img class="detail-image" style="width:100%; aspect-ratio:1; padding:24px; background:var(--surface-alt);" src="{{ url_for('static', filename='uploads/product_images/' ~ product.image) }}" alt="{{ product.name }}">
+    </div>
+    <div class="card">
+        <p class="eyebrow">Product Details</p>
+        <h2>{{ product.name }}</h2>
+        <div class="detail-list">
+            <div class="detail-row"><strong>Description:</strong> {{ product.description }}</div>
+            <div class="detail-row"><strong>Category:</strong> {{ product.category }}</div>
+            <div class="detail-row"><strong>Price:</strong> &#8377;{{ product.price }}</div>
+        </div>
+        <div class="actions">
+            <a class="btn" href="{{ url_for('update_item_page', item_id=product.product_id) }}">Edit Product</a>
+            <a class="btn btn-secondary" href="{{ url_for('item_list') }}">Back to List</a>
+        </div>
+    </div>
+</section>
+{% endblock %}

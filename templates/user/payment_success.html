@@ -1,0 +1,18 @@
+{% extends "admin/base.html" %}
+
+{% block title %}SmartKart - Payment Successful{% endblock %}
+
+{% block content %}
+<section class="success-card">
+    <div class="success-icon">✓</div>
+    <h2 style="color:var(--success);">Payment Successful!</h2>
+    <p style="margin:16px 0;">Your order has been placed successfully.</p>
+
+    <div class="detail-list" style="text-align:left; margin:24px 0;">
+        <div class="detail-row"><strong>Payment ID:</strong> {{ payment_id }}</div>
+        <div class="detail-row"><strong>Order ID:</strong> {{ order_id }}</div>
+    </div>
+
+    <a class="btn" href="/user/products" style="display:inline-flex;">Continue Shopping</a>
+</section>
+{% endblock %}

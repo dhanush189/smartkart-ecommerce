@@ -1,0 +1,41 @@
+{% extends "admin/base.html" %}
+
+{% block title %}SmartKart - Add Product{% endblock %}
+
+{% block content %}
+<section class="form-card wide">
+    <p class="eyebrow">Catalog Manager</p>
+    <h2>Add New Product</h2>
+    <p>Create a polished product listing with image, category, price, and description.</p>
+
+    <form method="POST" action="{{ url_for('add_item') }}" enctype="multipart/form-data">
+        <div class="form-grid">
+            <div class="field">
+                <label for="name">Product Name</label>
+                <input id="name" type="text" name="name" placeholder="Enter product name" required>
+            </div>
+            <div class="field">
+                <label for="category">Category</label>
+                <input id="category" type="text" name="category" placeholder="e.g. Electronics" required>
+            </div>
+            <div class="field">
+                <label for="price">Price</label>
+                <input id="price" type="number" step="0.01" name="price" placeholder="0.00" required>
+            </div>
+            <div class="field">
+                <label for="image">Product Image</label>
+                <input id="image" type="file" name="image" accept="image/*" required>
+            </div>
+            <div class="field full">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" placeholder="Describe the product..." required></textarea>
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit">Add Product</button>
+            <a class="btn btn-secondary" href="{{ url_for('item_list') }}">View Products</a>
+        </div>
+    </form>
+</section>
+{% endblock %}

@@ -1,0 +1,180 @@
+{% extends "admin/base.html" %}
+
+{% block title %}SmartKart - User Dashboard{% endblock %}
+
+{% block content %}
+<section class="deal-carousel" data-deal-carousel>
+    <button class="deal-arrow deal-arrow-left" type="button" data-carousel-prev aria-label="Previous deal">&lsaquo;</button>
+    <div class="deal-slides">
+        {% if products %}
+            {% for product in products[:5] %}
+                <article class="deal-hero deal-slide deal-bg-{{ loop.index }} {% if loop.first %}active{% endif %}">
+                    <div class="deal-copy">
+                        <p>{{ product.category }}</p>
+                        <h1>Deals under &#8377;399</h1>
+                        <div class="deal-tags">
+                            <span>TOP<br>BRANDS</span>
+                            <span>FAST<br>CHECKOUT</span>
+                        </div>
+                        <div class="deal-actions">
+                            <a class="btn" href="{{ url_for('user_products') }}">Shop All Products</a>
+                            <a class="btn btn-secondary" href="{{ url_for('view_cart') }}">View Cart</a>
+                        </div>
+                    </div>
+                    <a class="deal-image" href="{{ url_for('user_product_details', product_id=product.product_id) }}">
+                        <img src="{{ url_for('static', filename='uploads/product_images/' ~ product.image) }}" alt="{{ product.name }}">
+                    </a>
+                </article>
+            {% endfor %}
+        {% else %}
+            <article class="deal-hero deal-slide deal-bg-1 active">
+                <div class="deal-copy">
+                    <p>Welcome back, {{ user_name }}</p>
+                    <h1>Deals under &#8377;399</h1>
+                    <div class="deal-tags">
+                        <span>TOP<br>BRANDS</span>
+                        <span>FAST<br>CHECKOUT</span>
+                    </div>
+                    <div class="deal-actions">
+                        <a class="btn" href="{{ url_for('user_products') }}">Shop All Products</a>
+                        <a class="btn btn-secondary" href="{{ url_for('view_cart') }}">View Cart</a>
+                    </div>
+                </div>
+                <a class="deal-image" href="{{ url_for('user_products') }}">
+                    <div class="deal-image-fallback">SK</div>
+                </a>
+            </article>
+        {% endif %}
+    </div>
+    <button class="deal-arrow deal-arrow-right" type="button" data-carousel-next aria-label="Next deal">&rsaquo;</button>
+</section>
+
+{% if categories %}
+<section>
+    <div class="section-head">
+        <h2 class="section-title">Shop by Category</h2>
+        <a href="{{ url_for('user_products') }}" class="show-more">View All</a>
+    </div>
+    <div class="category-strip icon-category-strip">
+        {% for cat in categories %}
+            <a class="category-pill icon-only-pill" href="{{ url_for('user_products', category=cat.category) }}" aria-label="{{ cat.category }}" title="{{ cat.category }}">
+                {% set category_name = cat.category|lower %}
+                <span>
+                    {% if 'mobile' in category_name or 'phone' in category_name %}
+                        📱
+                    {% elif 'laptop' in category_name or 'computer' in category_name %}
+                        💻
+                    {% elif 'headphone' in category_name or 'earphone' in category_name or 'audio' in category_name %}
+                        🎧
+                    {% elif 'watch' in category_name %}
+                        ⌚
+                    {% elif 'camera' in category_name %}
+                        📷
+                    {% elif 'gaming' in category_name or 'game' in category_name %}
+                        🎮
+                    {% elif 'tv' in category_name or 'monitor' in category_name %}
+                        🖥️
+                    {% elif 'speaker' in category_name %}
+                        🔊
+                    {% else %}
+                        🛍️
+                    {% endif %}
+                </span>
+            </a>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
+
+{% if products %}
+<section>
+    <div class="section-head">
+        <h2 class="section-title">Latest Deals</h2>
+        <a href="{{ url_for('user_products') }}" class="show-more">Shop All</a>
+    </div>
+
+    <div class="product-rail" aria-label="Latest products">
+        {% for product in products %}
+            <article class="product-card product-rail-card">
+                <a href="{{ url_for('user_product_details', product_id=product.product_id) }}">
+                    <img src="{{ url_for('static', filename='uploads/product_images/' ~ product.image) }}" alt="{{ product.name }}">
+                </a>
+                <div class="product-card-body">
+                    <p class="product-name">{{ product.name }}</p>
+                    <p class="product-category">{{ product.category }}</p>
+                    <p class="product-price">&#8377;{{ product.price }}</p>
+                    <div class="actions compact-actions">
+                        <a class="btn" href="{{ url_for('add_to_cart', product_id=product.product_id) }}">Add</a>
+                        <a class="btn btn-secondary" href="{{ url_for('user_product_details', product_id=product.product_id) }}">View</a>
+                    </div>
+                </div>
+            </article>
+        {% endfor %}
+    </div>
+</section>
+
+<section>
+    <div class="section-head">
+        <div>
+            <p class="eyebrow">Product Catalog</p>
+            <h2 class="section-title">All Products</h2>
+        </div>
+        <a href="{{ url_for('view_cart') }}" class="show-more">Cart</a>
+    </div>
+
+    <div class="public-product-grid">
+        {% for product in products %}
+            <article class="product-card">
+                <a href="{{ url_for('user_product_details', product_id=product.product_id) }}">
+                    <img src="{{ url_for('static', filename='uploads/product_images/' ~ product.image) }}" alt="{{ product.name }}">
+                </a>
+                <div class="product-card-body">
+                    <div class="product-stars">
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star">★</span>
+                        <span class="star empty">★</span>
+                    </div>
+                    <p class="product-name">{{ product.name }}</p>
+                    <p class="product-category">{{ product.category }}</p>
+                    <p class="product-price">&#8377;{{ product.price }}</p>
+                    <div class="actions compact-actions">
+                        <a class="btn" href="{{ url_for('buy_now', product_id=product.product_id) }}">Buy Now</a>
+                        <a class="btn btn-secondary" href="{{ url_for('add_to_cart', product_id=product.product_id) }}">Add to Cart</a>
+                    </div>
+                </div>
+            </article>
+        {% endfor %}
+    </div>
+</section>
+{% else %}
+<section class="empty-state">
+    <h3>No products available</h3>
+    <p>Products added by admins will appear here.</p>
+</section>
+{% endif %}
+
+<section>
+    <div class="feature-grid">
+        <a class="card role-card" href="{{ url_for('user_products') }}">
+            <span class="role-icon">S</span>
+            <h3>Search Products</h3>
+            <p>Find items by name and category.</p>
+            <span class="text-link">Browse products</span>
+        </a>
+        <a class="card role-card" href="{{ url_for('view_cart') }}">
+            <span class="role-icon">C</span>
+            <h3>Your Cart</h3>
+            <p>Review selected items and checkout.</p>
+            <span class="text-link">Open cart</span>
+        </a>
+        <a class="card role-card" href="{{ url_for('my_orders') }}">
+            <span class="role-icon">O</span>
+            <h3>Orders</h3>
+            <p>Track previous purchases and invoices.</p>
+            <span class="text-link">View orders</span>
+        </a>
+    </div>
+</section>
+{% endblock %}

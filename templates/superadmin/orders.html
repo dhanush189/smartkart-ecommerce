@@ -1,0 +1,52 @@
+{% extends "admin/base.html" %}
+
+{% block title %}SmartKart - Super Admin Orders{% endblock %}
+
+{% block content %}
+<section class="section-head">
+    <div>
+        <p class="eyebrow">Super Admin</p>
+        <h2>All Orders</h2>
+        <p>Monitor every order placed across SmartKart.</p>
+    </div>
+    <a class="btn btn-secondary" href="{{ url_for('superadmin_dashboard') }}">Dashboard</a>
+</section>
+
+<section class="table-card">
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>Order ID</th>
+                    <th>Customer</th>
+                    <th>Items</th>
+                    <th>Amount</th>
+                    <th>Payment</th>
+                    <th>Delivery</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for order in orders %}
+                    <tr>
+                        <td><strong>#{{ order.order_id }}</strong></td>
+                        <td>
+                            <strong>{{ order.username or 'Unknown User' }}</strong>
+                            <p style="margin:2px 0 0;">{{ order.user_email or 'No email' }}</p>
+                        </td>
+                        <td>{{ order.item_count }}</td>
+                        <td><strong>&#8377;{{ order.amount }}</strong></td>
+                        <td><span class="status-badge paid">{{ order.payment_status }}</span></td>
+                        <td><span class="status-badge status-{{ (order.order_status or 'Pending')|lower }}">{{ order.order_status or 'Pending' }}</span></td>
+                        <td>{{ order.created_at }}</td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="7" style="text-align:center; padding:40px;">No orders found.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

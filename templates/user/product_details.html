@@ -1,0 +1,60 @@
+{% extends "admin/base.html" %}
+
+{% block title %}SmartKart - {{ product.name }}{% endblock %}
+
+{% block content %}
+<section class="section-head">
+    <div>
+        <p class="eyebrow">Product Details</p>
+        <h2>{{ product.name }}</h2>
+    </div>
+    <a class="btn btn-secondary" href="{{ url_for('user_products') }}">Back to Products</a>
+</section>
+
+<section class="product-detail" style="background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:32px;">
+    <div>
+        <img class="detail-image"
+             style="width:100%; border-radius:var(--radius); background:var(--surface-alt); padding:24px;"
+             src="{{ url_for('static', filename='uploads/product_images/' ~ product.image) }}"
+             alt="{{ product.name }}">
+    </div>
+
+    <div>
+        <p class="eyebrow">{{ product.category }}</p>
+        <h2 style="margin-bottom:8px;">{{ product.name }}</h2>
+
+        <div class="product-stars" style="margin-bottom:16px;">
+            <span class="star">★</span>
+            <span class="star">★</span>
+            <span class="star">★</span>
+            <span class="star">★</span>
+            <span class="star empty">★</span>
+        </div>
+
+        <p>{{ product.description }}</p>
+
+        <div class="detail-list">
+            <div class="detail-row">
+                <strong>Category</strong>
+                <p>{{ product.category }}</p>
+            </div>
+            <div class="detail-row">
+                <strong>Price</strong>
+                <p class="product-price" style="font-size:1.5rem;">₹{{ product.price }}</p>
+            </div>
+        </div>
+
+        <!-- Add To Cart Button -->
+        <div style="display:grid; gap:12px; margin-top:24px;">
+            <form action="/user/add-to-cart/{{ product.product_id }}" method="GET">
+                <button type="submit" style="width:100%; padding:14px; font-size:1rem; border-radius:var(--radius-full);">
+                    🛒 Add to Cart
+                </button>
+            </form>
+            <a href="/user/buy-now/{{ product.product_id }}" class="btn" style="width:100%; padding:14px; font-size:1rem; border-radius:var(--radius-full); background:var(--text); text-align:center;">
+                ⚡ Buy Now
+            </a>
+        </div>
+    </div>
+</section>
+{% endblock %}

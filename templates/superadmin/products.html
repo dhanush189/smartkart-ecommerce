@@ -1,0 +1,54 @@
+{% extends "admin/base.html" %}
+
+{% block title %}SmartKart - Super Admin Products{% endblock %}
+
+{% block content %}
+<section class="section-head">
+    <div>
+        <p class="eyebrow">Super Admin</p>
+        <h2>All Products</h2>
+        <p>View products created by every admin across the platform.</p>
+    </div>
+    <a class="btn btn-secondary" href="{{ url_for('superadmin_dashboard') }}">Dashboard</a>
+</section>
+
+<section class="table-card">
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Image</th>
+                    <th>Product</th>
+                    <th>Category</th>
+                    <th>Price</th>
+                    <th>Admin</th>
+                    <th>Admin Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for product in products %}
+                    <tr>
+                        <td>{{ product.product_id }}</td>
+                        <td>
+                            <img class="product-thumb" src="{{ url_for('static', filename='uploads/product_images/' ~ product.image) }}" alt="{{ product.name }}">
+                        </td>
+                        <td><strong>{{ product.name }}</strong></td>
+                        <td>{{ product.category }}</td>
+                        <td>&#8377;{{ product.price }}</td>
+                        <td>
+                            <strong>{{ product.admin_name or 'Unknown Admin' }}</strong>
+                            <p style="margin:2px 0 0;">{{ product.admin_email or 'No email' }}</p>
+                        </td>
+                        <td><span class="status-badge status-{{ product.approval_status or 'pending' }}">{{ product.approval_status or 'unknown' }}</span></td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="7" style="text-align:center; padding:40px;">No products found.</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

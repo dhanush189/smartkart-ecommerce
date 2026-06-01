@@ -1,0 +1,45 @@
+{% extends "admin/base.html" %}
+
+{% block title %}SmartKart - Update Product{% endblock %}
+
+{% block content %}
+<section class="form-card wide">
+    <p class="eyebrow">Catalog Manager</p>
+    <h2>Update Product</h2>
+    <p>Refresh product details and optionally replace the product image.</p>
+
+    <form method="POST" action="{{ url_for('update_item', item_id=product.product_id) }}" enctype="multipart/form-data">
+        <div class="form-grid">
+            <div class="field">
+                <label for="name">Product Name</label>
+                <input id="name" type="text" name="name" value="{{ product.name }}" required>
+            </div>
+            <div class="field">
+                <label for="category">Category</label>
+                <input id="category" type="text" name="category" value="{{ product.category }}" required>
+            </div>
+            <div class="field">
+                <label for="price">Price</label>
+                <input id="price" type="number" step="0.01" name="price" value="{{ product.price }}" required>
+            </div>
+            <div class="field">
+                <label>Current Image</label>
+                <img class="product-thumb" src="{{ url_for('static', filename='uploads/product_images/' ~ product.image) }}" alt="{{ product.name }}">
+            </div>
+            <div class="field full">
+                <label for="description">Description</label>
+                <textarea id="description" name="description" required>{{ product.description }}</textarea>
+            </div>
+            <div class="field full">
+                <label for="image">Choose New Image (Optional)</label>
+                <input id="image" type="file" name="image" accept="image/*">
+            </div>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit">Update Product</button>
+            <a class="btn btn-secondary" href="{{ url_for('item_list') }}">Back to Product List</a>
+        </div>
+    </form>
+</section>
+{% endblock %}
