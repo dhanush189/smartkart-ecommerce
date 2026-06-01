@@ -6,31 +6,64 @@
 <section class="hero" style="background: var(--surface-alt);">
     <div>
         <p class="eyebrow">About SmartKart</p>
-        <h1>A simple ecommerce admin system built for clear product management.</h1>
-        <p>SmartKart brings the core admin workflow into one friendly interface: secure signup, login, product creation, catalog filtering, profile updates, and image uploads.</p>
+        <h1>Your complete online shopping experience in one simple app.</h1>
+        <p>SmartKart is built for customers who want to discover products, compare details, add favorites to the cart, choose a delivery address, pay securely, and keep track of every order from one clean place.</p>
         <div class="hero-actions">
-            <a class="btn" href="{{ url_for('admin_login') }}">Start Managing</a>
+            <a class="btn" href="{{ url_for('user_login') }}">Start Shopping</a>
+            <a class="btn btn-secondary" href="{{ url_for('user_register') }}">Create Account</a>
             <a class="btn btn-secondary" href="{{ url_for('contact') }}">Contact</a>
         </div>
     </div>
     <div class="hero-panel">
-        <p class="eyebrow">Project Focus</p>
-        <p>This application is designed to be practical, smooth, and easy to extend with customer-facing pages, cart features, order management, and payment workflows later.</p>
+        <p class="eyebrow">Why SmartKart</p>
+        <p>From browsing electronics to downloading invoices after payment, SmartKart connects the full buying journey with admin tools that keep products, orders, and delivery updates organized behind the scenes.</p>
     </div>
 </section>
 
 <section class="info-grid">
     <article class="card">
-        <h3>Purpose</h3>
-        <p>Give admins an easy place to manage ecommerce products without a confusing interface.</p>
+        <h3>Browse With Confidence</h3>
+        <p>Explore latest products, trending categories, detailed descriptions, images, prices, and search filters so you can find the right item faster.</p>
     </article>
     <article class="card">
-        <h3>Security</h3>
-        <p>Admin accounts use OTP verification and hashed passwords for safer access.</p>
+        <h3>Cart And Checkout</h3>
+        <p>Add products to your cart, update quantities, select only the items you want to buy, choose a saved delivery address, and complete payment through Razorpay.</p>
     </article>
     <article class="card">
-        <h3>Design</h3>
-        <p>Clean modern design, readable spacing, and smooth hover effects keep the app approachable.</p>
+        <h3>Orders And Invoices</h3>
+        <p>After checkout, you can view order details, check payment and delivery status, continue shopping, and download invoices whenever you need them.</p>
     </article>
+</section>
+
+<section style="margin-top:48px;">
+    <div class="section-head">
+        <div>
+            <p class="eyebrow">Full Application</p>
+            <h2 class="section-title">Built For Customers, Admins, And Owners</h2>
+        </div>
+    </div>
+
+    <div class="feature-grid">
+        <article class="card role-card">
+            <span class="role-icon">U</span>
+            <h3>Customer Portal</h3>
+            <p>Create an account, log in securely, browse the catalog, view product details, manage your cart, save addresses, place orders, and track purchases.</p>
+        </article>
+        <article class="card role-card">
+            <span class="role-icon">A</span>
+            <h3>Admin Portal</h3>
+            <p>Admins keep the store active by adding products, updating images, changing prices, managing categories, viewing customer orders, and updating delivery progress.</p>
+        </article>
+        <article class="card role-card">
+            <span class="role-icon">S</span>
+            <h3>Super Admin Portal</h3>
+            <p>The owner dashboard brings higher-level control with admin management, product oversight, order monitoring, and revenue tracking for the whole platform.</p>
+        </article>
+        <article class="card role-card">
+            <span class="role-icon">SK</span>
+            <h3>One Connected Store</h3>
+            <p>Every part works together: admins publish products, customers buy them, payments are recorded, invoices are generated, and orders stay visible until delivery.</p>
+        </article>
+    </div>
 </section>
 {% endblock %}

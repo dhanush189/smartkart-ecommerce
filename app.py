@@ -305,17 +305,34 @@ def initialize_database():
     conn.close()
 
 
+def get_carousel_products(cursor):
+    cursor.execute(
+        """
+        SELECT *
+        FROM products
+        WHERE LOWER(category) IN ('smartphone', 'smartphones', 'mobile', 'mobiles')
+           OR LOWER(name) LIKE '%marshall%'
+        ORDER BY
+            CASE WHEN LOWER(name) LIKE '%marshall%' THEN 1 ELSE 0 END,
+            product_id DESC
+        LIMIT 5
+        """
+    )
+    return cursor.fetchall()
+
+
 # ---------------- HOME PAGE ----------------
 @app.route('/')
 def home():
     conn = get_db_connection()
     cursor = conn.cursor(dictionary=True)
+    carousel_products = get_carousel_products(cursor)
     cursor.execute("SELECT * FROM products ORDER BY product_id DESC")
     products = cursor.fetchall()
     cursor.close()
     conn.close()
 
-    return render_template("admin/index.html", products=products)
+    return render_template("admin/index.html", products=products, carousel_products=carousel_products)
 
 
 @app.route('/about')
@@ -1255,6 +1272,8 @@ def user_dashboard():
     cursor.execute("SELECT DISTINCT category FROM products ORDER BY category")
     categories = cursor.fetchall()
 
+    carousel_products = get_carousel_products(cursor)
+
     cursor.execute("SELECT * FROM products ORDER BY product_id DESC")
     products = cursor.fetchall()
 
@@ -1265,6 +1284,7 @@ def user_dashboard():
         "user/user_home.html",
         user_name=session['user_name'],
         products=products,
+        carousel_products=carousel_products,
         categories=categories
     )
 

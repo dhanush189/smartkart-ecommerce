@@ -6,12 +6,14 @@
 <section class="deal-carousel" data-deal-carousel>
     <button class="deal-arrow deal-arrow-left" type="button" data-carousel-prev aria-label="Previous deal">&lsaquo;</button>
     <div class="deal-slides">
-        {% if products %}
-            {% for product in products[:5] %}
+        {% if carousel_products %}
+            {% for product in carousel_products %}
                 <article class="deal-hero deal-slide deal-bg-{{ loop.index }} {% if loop.first %}active{% endif %}">
                     <div class="deal-copy">
-                        <p>{{ product.category }}</p>
-                        <h1>Deals under &#8377;399</h1>
+                        {% set product_name = product.name|lower %}
+                        {% set category_name = product.category|lower %}
+                        <p>{% if 'mobile' in category_name or 'phone' in category_name or ('speaker' in category_name and 'marshall' not in product_name) %}Mobiles{% else %}{{ product.category }}{% endif %}</p>
+                        <h1>Up to 70% Off</h1>
                         <div class="deal-tags">
                             <span>TOP<br>BRANDS</span>
                             <span>FAST<br>CHECKOUT</span>
@@ -30,7 +32,7 @@
             <article class="deal-hero deal-slide deal-bg-1 active">
                 <div class="deal-copy">
                     <p>Welcome back, {{ user_name }}</p>
-                    <h1>Deals under &#8377;399</h1>
+                    <h1>Up to 70% Off</h1>
                     <div class="deal-tags">
                         <span>TOP<br>BRANDS</span>
                         <span>FAST<br>CHECKOUT</span>

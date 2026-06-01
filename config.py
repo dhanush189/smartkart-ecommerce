@@ -5,21 +5,22 @@
 # details, Email settings, Razorpay keys etc.
 # ------------------------------------
 
-import os
+SECRET_KEY = "your_secret_key_here"   # used for sessions
 
-SECRET_KEY = os.environ.get("SECRET_KEY")
-
+# Super Admin / Owner Login
 SUPERADMIN_EMAIL = "owner@smartkart.com"
 SUPERADMIN_PASSWORD = "owner123"
 
+# SQLite Database Configuration
 DB_PATH = "smartkart.db"
 
+# Email SMTP Settings
 MAIL_SERVER = 'smtp.gmail.com'
 MAIL_PORT = 587
 MAIL_USE_TLS = True
+MAIL_USERNAME = 'dhanushnemmoju@gmail.com'
+MAIL_PASSWORD = 'iivj wfqi nhkk hidj'   # Gmail App Password
 
-MAIL_USERNAME = os.environ.get("MAIL_USERNAME")
-MAIL_PASSWORD = os.environ.get("MAIL_PASSWORD")
-
-RAZORPAY_KEY_ID = os.environ.get("RAZORPAY_KEY_ID")
-RAZORPAY_KEY_SECRET = os.environ.get("RAZORPAY_KEY_SECRET")
+# Razorpay API Keys
+RAZORPAY_KEY_ID = 'rzp_test_SwHPZCgTazz2NR'
+RAZORPAY_KEY_SECRET = 'zg5P9lmda3fRi1oxc5xNrreb'
